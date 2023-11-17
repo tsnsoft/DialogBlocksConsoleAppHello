@@ -1,6 +1,5 @@
 ﻿#include <wx/wx.h>
 
-
 int main(int argc, char** argv)
 {
 	wxLocale m_locale; // Создать объект локали для wxWidgets
