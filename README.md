@@ -1,34 +1,46 @@
 # DialogBlocksConsoleAppHello
 Пример простейшей консольной программы на C++ с использованием wxWidgets и DialogBlocks для Visual Studio 2022
 
-*под Windows:*
-
-![srcreenshot](screenshot1.png)
-
-*под Linux:*
-
-![srcreenshot](screenshot2.png)
+![srcreenshot](screenshot.png)
 
 ```
 #include <wx/wx.h>
 
+#ifdef _WIN32 // Если это Windows
+#include <io.h>
+#include <fcntl.h>
+#endif 
+
 int main(int argc, char** argv)
 {
+	setlocale(LC_ALL, "ru_RU.UTF-8"); // Установить русскую локаль для Linux
 	wxLocale m_locale; // Создать объект локали для wxWidgets
 	m_locale.Init(wxLANGUAGE_RUSSIAN, wxLOCALE_DONT_LOAD_DEFAULT); // Установить локаль для wxWidgets
 
 #ifdef __WXMSW__ // Определение для Windows
-	SetConsoleCP(1251); // Установить кодовую страницу ввода для Windows
-	SetConsoleOutputCP(1251); // Установить кодовую страницу вывода для Windows
-#elif __WXGTK__ // Определение для Linux
-	wxPuts(wxT("Замечательно! Das ist großartig! Wonderful! 精彩的！ رائع!")); // Вывести строку
+	_setmode(_fileno(stdout), _O_U16TEXT); // Установить Юникод для вывода в консоли Windows
+	_setmode(_fileno(stdin), _O_U16TEXT); // Установить Юникод для ввода в консоли Windows
+	_setmode(_fileno(stderr), _O_U16TEXT); // Установить Юникод для вывода ошибок в консоли Windows
 #endif
 
-	std::wstring input; // Создать строковую переменную
-	wxPuts(wxT("Как вас зовут?")); // Вывести строку
-	std::wcin >> input; // Считать строку
-	wxString result(input); // Создать строку
-	wxPuts(L"Привет," + result + "!"); // Вывести строку
+	wxPuts(L"Замечательно! Das ist großartig! Wonderful! 精彩的！ رائع!\n");
+	wxPrintf(L"Введите имя: ");
+	std::wstring fio; // Создать строковую переменную
+	std::wcin >> fio; // Считать строку
+	wxPuts(L"Привет, " + fio + L"!"); // Вывести строку
+	wxPuts(L"Размер строки: " + std::to_wstring(fio.length())); // Вывести размер строки
+	for (int i = 0; i < fio.length(); i++) {
+		wxPuts("[" + std::to_wstring(i) + "]: " + fio[i] + " (code: " +
+			std::to_wstring(int(fio[i])) + ")");
+	}
+
+#ifdef __WXMSW__ // Определение для Windows
+	system("pause"); // Приостановить выполнение программы
+#else // Определение для Linux
+	system("read -p \"Нажмите Enter для продолжения...\"  var"); // Приостановить выполнение программы
+#endif
+
+	return 0;
 }
 ```
 
