@@ -6,11 +6,6 @@
 ```
 #include <wx/wx.h>
 
-#ifdef _WIN32 // Если это Windows
-#include <io.h>
-#include <fcntl.h>
-#endif 
-
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "ru_RU.UTF-8"); // Установить русскую локаль для Linux
